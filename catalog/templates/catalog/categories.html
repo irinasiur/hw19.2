@@ -1,5 +1,5 @@
 {% extends 'catalog/base.html' %}
-{% load my_tags %}
+
 
 {% block content%}
 
@@ -10,16 +10,9 @@
         <div class="col-md-4">
             <div class="card mb-4 box-shadow">
                 <div class="card-body">
-
-                    {% if object.image %}
-                         <img class="card-img-top"
-                              src="{{ object.image|mymedia }}"
-                              alt="Card image cap"
-                                style="max-width: 30%; height: auto;">
-                        {% endif %}
                     <p class="card-text">{{ object.name|title|linebreaks }}
                         {{ object.description|capfirst|truncatechars:100 }}<br><br>
-                        {{object.purchase_price}} ₽</p>
+                        {{object.purchase_price}}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
                             <a href="{% url 'catalog:product' object.id %}" class="btn btn-sm btn-outline-secondary">View</a>
