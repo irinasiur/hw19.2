@@ -1,37 +1,56 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView, DetailView
 
 from catalog.models import Product, Category
 
 
-def index(request):
-    product_list = Product.objects.all()
-    context = {
-        'object_list': product_list,
-        'title': 'Продукты',
-        'text': 'Всегда самые свежие, натуральные, выращенные в экологически чистых уголках природы специально для вас'
-    }
-    return render(request, 'catalog/index.html', context)
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/index.html'
 
 
-def categories(request):
-    categories_list = Category.objects.all()
-    context = {
-        'object_list': categories_list,
-        'title': 'Категории',
-        'text': 'Всегда самые свежие, натуральные, выращенные в экологически чистых уголках природы специально для вас'
-    }
-    return render(request, 'catalog/categories.html', context)
+# def index(request):
+#     product_list = Product.objects.all()
+#     context = {
+#         'object_list': product_list,
+#         'title': 'Продукты',
+#         'text': 'Всегда самые свежие, натуральные, выращенные в экологически чистых уголках природы специально для вас'
+#     }
+#     return render(request, 'catalog/index.html', context)
 
-def product(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+class CategoriesListView(ListView):
+    model = Category
+    template_name = 'catalog/categories.html'
+# def categories(request):
+#     categories_list = Category.objects.all()
+#     context = {
+#         'object_list': categories_list,
+#         'title': 'Категории',
+#         'text': 'Всегда самые свежие, натуральные, выращенные в экологически чистых уголках природы специально для вас'
+#     }
+#     return render(request, 'catalog/categories.html', context)
 
-    context = {
-        'product': product,
-        'title': 'ДЛЯ ВАС',
-        'text': 'Всегда самые свежие, натуральные, выращенные в экологически чистых уголках природы специально для вас'
 
-    }
-    return render(request, 'catalog/product.html', context)
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product.html'
+
+
+class CategoriesDetailView(DetailView):
+    model = Category
+    template_name = 'catalog/product.html'
+
+
+# def product(request, product_id):
+#     product = get_object_or_404(Product, id=product_id)
+#
+#     context = {
+#         'product': product,
+#         'title': 'ДЛЯ ВАС',
+#         'text': 'Всегда самые свежие, натуральные, выращенные в экологически чистых уголках природы специально для вас'
+#
+#     }
+#     return render(request, 'catalog/product.html', context)
 
 
 def contacts(request):
@@ -43,16 +62,5 @@ def contacts(request):
         phone = request.POST.get('phone')
         message = request.POST.get('message')
         print(f"{name}, {phone},{message}")
-    #     return redirect('index')
-    # else:
-    return render(request, 'catalog/contacts.html', context)
 
-    # def contacts(request):
-    #     if request.method == 'POST':
-    #         name = request.POST.get('name')
-    #         phone = request.POST.get('phone')
-    #         message = request.POST.get('message')
-    #         print(f"{name}, {phone},{message}")
-    #         return redirect('index')
-    #     else:
-    #         return render(request, 'catalog/contacts.html')
+    return render(request, 'catalog/contacts.html', context)
