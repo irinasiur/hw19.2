@@ -23,6 +23,7 @@ class MaterialCreateView(CreateView):
 class MaterialUpdateView(UpdateView):
     model = Material
     fields = ('title', 'content',)
+
     # success_url = reverse_lazy('materials:list')
 
     def form_valid(self, form):
@@ -35,7 +36,6 @@ class MaterialUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('materials:view', args=[self.kwargs.get('pk')])
-
 
 
 class MaterialListView(ListView):
@@ -60,3 +60,5 @@ class MaterialDetailView(DetailView):
 class MaterialDeleteView(DeleteView):
     model = Material
     success_url = reverse_lazy('materials:list')
+
+

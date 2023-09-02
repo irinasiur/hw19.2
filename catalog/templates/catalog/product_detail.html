@@ -7,9 +7,15 @@
         <div class="col-12">
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">{{ product.name | title }}</h4>
+                    <h1 class="my-0 font-weight-normal">{{ product.name | title }}</h1>
+                    {% for version in object.version_set.all %}
+                    <h4 class="my-0 font-weight-normal">{{ version.name }} </h4>
+
+
                 </div>
                 <div class="card-body">
+                    <h4 class="card-title pricing-card-title">Актуальная версия: {{ version.number_of_version }}</h4>
+                    {% endfor %}
                     <h1 class="card-title pricing-card-title">{{ product.purchase_price }} ₽</h1>
                     <ul class="list-unstyled mt-3 mb-4 text-start m-3" style="padding-left: 10px; text-align: left">
                        {% if product.image %}
