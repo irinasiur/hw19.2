@@ -24,8 +24,11 @@
                         {% for version in object.version_set.all %}
                         {% if version.is_active %}
                         <p class="text" align="right">Актуальная версия: {{ version.number_of_version }}</p>
+
+
                     {% endif %}
                     {% endfor %}
+                    <p class="text" align="right">{{ object.user }}</p>
                         {{object.purchase_price}} ₽</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">

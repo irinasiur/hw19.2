@@ -18,7 +18,7 @@
           {% csrf_token %}
           {{ form.as_p }}
           {{ version_form.as_p }}
-
+<!--# <p class="text" align="right">{{ object.user|default:"Неавторизованый пользователь" }}</p>-->
           <button type="submit" class=" btn btn-success">Сохранить</button>
 
       </div>

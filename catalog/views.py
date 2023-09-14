@@ -10,6 +10,11 @@ from catalog.models import Product, Category, Version
 class ProductListView(ListView):
     model = Product
 
+    def get_queryset(self):
+        if not self.request.user.is_anonymous:
+            return Product.objects.filter(user=self.request.user)
+        return Product.objects.all()
+
 
 # def index(request):
 #     product_list = Product.objects.all()
@@ -57,6 +62,7 @@ class CategoriesDetailView(DetailView):
 
 
 def contacts(request):
+
     context = {
         'title': 'Контакты'
     }
@@ -73,6 +79,13 @@ class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:index')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.user = self.request.user
+        self.object.save()
+
+        return super().form_valid(form)
 
 
 class ProductUpdateView(UpdateView):
@@ -98,6 +111,8 @@ class ProductUpdateView(UpdateView):
         context_data = self.get_context_data()
         formset = context_data['formset']
         self.object = form.save()
+        self.object.user = self.request.user
+        self.object.save()
 
         if formset.is_valid():
             formset.instance = self.object
@@ -109,24 +124,24 @@ class ProductDeleteView(DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:index')
 
-# class VersionCreateView(CreateView):
-#     model = Version
-#     form_class = VersionForm
-#
-#
-# class VersionUpdateView(UpdateView):
-#     model = Version
-#     form_class = VersionForm
-#
-#
-# class VersionListView(ListView):
-#     model = Version
-#
-#
-# class VersionDetailView(DetailView):
-#     model = Version
-#
-#
-# class VersionDeleteView(DeleteView):
-#     model = Version
-#     success_url = reverse_lazy('catalog:index')
+class VersionCreateView(CreateView):
+    model = Version
+    form_class = VersionForm
+
+
+class VersionUpdateView(UpdateView):
+    model = Version
+    form_class = VersionForm
+
+
+class VersionListView(ListView):
+    model = Version
+
+
+class VersionDetailView(DetailView):
+    model = Version
+
+
+class VersionDeleteView(DeleteView):
+    model = Version
+    success_url = reverse_lazy('catalog:index')

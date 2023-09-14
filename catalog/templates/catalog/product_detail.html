@@ -28,6 +28,7 @@
 
                         <li>- {{ product.description | capfirst }}</li>
                         <li>- {{ product.category | capfirst }}</li>
+                            <p class="text" align="right">{{ object.user|default:"Неавторизованый пользователь" }}</p>
 <!--                        <li>- {{ product.date_of_creation }}</li>-->
 <!--                        <li>- {{ product.last_modified_date }}</li>-->
                     </ul>
