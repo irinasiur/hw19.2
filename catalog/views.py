@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.cache import cache
 from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -5,6 +7,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from catalog.forms import ProductForm, VersionForm
 from catalog.models import Product, Category, Version
+from catalog.servicese.servicese_category import get_categories
+
 
 
 class ProductListView(ListView):
@@ -28,37 +32,62 @@ class ProductListView(ListView):
 class CategoriesListView(ListView):
     model = Category
     template_name = 'catalog/categories.html'
+    context_object_name = 'object_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Все категории продуктов'
+        # Используйте функцию для получения категорий
+        context['categories'] = get_categories()
+        return context
 
 
-# def categories(request):
-#     categories_list = Category.objects.all()
-#     context = {
-#         'object_list': categories_list,
-#         'title': 'Категории',
-#         'text': 'Всегда самые свежие, натуральные, выращенные в экологически чистых уголках природы специально для вас'
-#     }
-#     return render(request, 'catalog/categories.html', context)
+    # template_name = 'catalog/categories.html'
+    # context_object_name = 'object_list'
+    # queryset = Category.objects.all()
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['title'] = 'Все категории продуктов'
+    #     return context
+    #
+    # def get_queryset(self):
+    #     key = 'category_list'
+    #     category_list = cache.get(key)
+    #     if category_list is None:
+    #         category_list = super().get_queryset()
+    #         cache.set(key, category_list)
+    #     return category_list
+
+    # def categories(self, request):
+    #     context = {
+    #         'object_list': get_categories_cache(),
+    #         'title': 'Все категории продуктов'
+    #     }
+    #     return render(request, 'catalog/categories.html', context)
 
 
 class ProductDetailView(DetailView):
     model = Product
 
+    # def get_context_data(self, **kwargs):
+    #     context_data = super().get_context_data(**kwargs)
+    #     if settings.CACHE_ENABLED:
+    #         key = f'product_list_{self.object.pk}'
+    #         product_list = cache.get(key)
+    #         if product_list is None:
+    #             product_list = Product.objects.filter(user=self.request.user)
+    #             cache.set(key, product_list)
+    #     else:
+    #         product_list = Product.objects.filter(user=self.request.user)
+    #
+    #     context_data['subjects'] = product_list
+    #     return context_data
+
 
 class CategoriesDetailView(DetailView):
     model = Category
-    template_name = 'catalog/product_detail.html'
-
-
-# def product(request, product_id):
-#     product = get_object_or_404(Product, id=product_id)
-#
-#     context = {
-#         'product': product,
-#         'title': 'ДЛЯ ВАС',
-#         'text': 'Всегда самые свежие, натуральные, выращенные в экологически чистых уголках природы специально для вас'
-#
-#     }
-#     return render(request, 'catalog/product_detail.html', context)
+    template_name = 'catalog/category_detail.html'
 
 
 def contacts(request):
@@ -93,9 +122,6 @@ class ProductUpdateView(UpdateView):
     form_class = ProductForm
 
     success_url = reverse_lazy('catalog:index')
-
-    # def get_success_url(self):
-    #     return reverse('catalog:product_update', args=[self.kwargs.get('pk')])
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

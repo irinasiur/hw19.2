@@ -1,6 +1,7 @@
 from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from catalog import views
 from catalog.apps import CatalogConfig
@@ -16,7 +17,7 @@ urlpatterns = [
     path('', ProductListView.as_view(), name="index"),
     path('create/', ProductCreateView.as_view(), name="create_product"),
     path('update/<int:pk>/', ProductUpdateView.as_view(), name='update_product'),
-    path('delete/<int:pk>/', ProductDeleteView.as_view(), name='delete_product'),
+    path('delete/<int:pk>/', cache_page(60)(ProductDeleteView.as_view()), name='delete_product'),
     path('product/<int:pk>/', ProductDetailView.as_view(), name='view_product'),
     path('contacts/', views.contacts, name='contacts'),
     path('categories/', CategoriesListView.as_view(), name='categories'),
